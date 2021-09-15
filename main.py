@@ -27,7 +27,7 @@ def binary_search(mylist, key):
 def _binary_search(mylist, key, left, right):
 	"""
 	Recursive implementation of binary search.
-
+	
 	Params:
 	  mylist....list to search
 	  key.......search key
@@ -37,14 +37,25 @@ def _binary_search(mylist, key, left, right):
 	Returns:
 	  index of key in mylist, or -1 if not present.
 	"""
+	if left>right:
+		return -1
+	midpoint = (left + right)//2
+	if mylist[midpoint] == key:
+		return midpoint
+	elif mylist[midpoint] > key:
+		return _binary_search(mylist,key,0,mylist[midpoint]-1)
+	elif mylist[midpoint] < key:
+		return _binary_search(mylist,key,mylist[midpoint]+1,right)
 	### TODO
-	pass
+	return -1
 
 def test_binary_search():
 	assert binary_search([1,2,3,4,5], 5) == 4
 	assert binary_search([1,2,3,4,5], 1) == 0
 	assert binary_search([1,2,3,4,5], 6) == -1
 	### TODO: add two more tests here.
+	assert binary_search([3,6,9,10,13], 9) == 2
+	assert binary_search([1,2,3,4,5], 10) == -1
 	pass
 
 
@@ -66,6 +77,10 @@ def time_search(search_fn, mylist, key):
 	  the number of milliseconds it takes to run this
 	  search function on this input.
 	"""
+	start = time.time()
+	search_fn(mylist,key)
+	end = time.time()
+	return (end-start)*1000
 	### TODO
 	pass
 
@@ -84,7 +99,22 @@ def compare_search(sizes=[1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7]):
 	  indicating the number of milliseconds it takes
 	  for each method to run on each value of n
 	"""
-	### TODO
+	alist = []
+	tuple_list = []
+	for i in range(len(sizes)):
+		k = sizes[i]
+		n = int(k)
+		for j in range(0,n-1):
+			alist.append(j)
+		linear_search_time = time_search(linear_search,alist,-1)
+		binary_search_time = time_search(binary_search,alist,-1)
+		tuple_list.append([n,linear_search_time,binary_search_time])
+	return tuple_list
+	
+	
+
+
+            
 	pass
 
 def print_results(results):
@@ -101,3 +131,5 @@ def test_compare_search():
 	assert res[1][0] == 100
 	assert res[0][1] < 1
 	assert res[1][1] < 1
+
+print_results(compare_search())
